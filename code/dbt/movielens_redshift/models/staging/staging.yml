@@ -1,0 +1,8 @@
+version: 2
+
+sources:
+  - name: movielens_rds_zeroetl.public
+    tables:
+      - name: links
+      - name: movies
+      - name: ratings

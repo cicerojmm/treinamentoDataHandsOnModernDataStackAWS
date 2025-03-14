@@ -1,0 +1,9 @@
+spark-submit \
+    --deploy-mode cluster \
+    --master yarn \
+    --py-files s3://cjmm-code-spark/datahandson-mds-emr/modules.zip \
+    s3://cjmm-code-spark/datahandson-mds-emr/main.py\
+    --params '{"job_name": "raw_to_staged", "input_path": "s3://cjmm-datalake-raw/movielens/tags/"", "output_path": "s3://cjmm-datalake-staged/movielens_delta_emr/tags/", "primary_key": "userId"}'
+
+
+spark-submit --py-files s3://cjmm-code-spark/datahandson-mds-emr/modules.zip  s3://cjmm-code-spark/datahandson-mds-emr/main.py "{\"job_name\": \"raw_to_staged\", \"input_path\": \"s3://cjmm-datalake-raw/movielens/tags/\", \"output_path\": \"s3://cjmm-datalake-staged/movielens_delta_emr/tags/\", \"primary_key\": \"userId\"}"
