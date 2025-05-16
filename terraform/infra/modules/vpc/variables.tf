@@ -8,12 +8,6 @@ variable "vpc_name" {
   type        = string
 }
 
-variable "tags" {
-  description = "Tags to apply to resources"
-  type        = map(string)
-  default     = {}
-}
-
 variable "public_subnet_cidrs" {
   description = "List of CIDR blocks for public subnets"
   type        = list(string)
@@ -27,4 +21,8 @@ variable "private_subnet_cidrs" {
 variable "availability_zones" {
   description = "List of availability zones to use"
   type        = list(string)
+}
+
+variable "project_name" {
+  type = string
 }

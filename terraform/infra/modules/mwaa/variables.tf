@@ -1,16 +1,13 @@
-variable "mwaa_env_name" {
-  description = "Nome do ambiente MWAA"
+
+variable "environment_name" {
+  description = "Nome do ambiente para uso em tags e identificadores"
   type        = string
+  default     = "mwaa-environment"
 }
 
 variable "s3_bucket_arn" {
   description = "ARN do bucket S3 para armazenar DAGs"
   type        = string
-}
-
-variable "subnet_ids" {
-  description = "Lista de subnets para MWAA"
-  type        = list(string)
 }
 
 variable "airflow_version" {
@@ -43,8 +40,32 @@ variable "webserver_access_mode" {
   default     = "PUBLIC_ONLY"
 }
 
-variable "vpc_id" {
-  description = "VPC ID"
+variable "vpc_cidr" {
+  description = "CIDR block para a VPC"
   type        = string
+  default     = "10.192.0.0/16"
 }
 
+variable "public_subnet_1_cidr" {
+  description = "CIDR block para a primeira subnet pública"
+  type        = string
+  default     = "10.192.10.0/24"
+}
+
+variable "public_subnet_2_cidr" {
+  description = "CIDR block para a segunda subnet pública"
+  type        = string
+  default     = "10.192.11.0/24"
+}
+
+variable "private_subnet_1_cidr" {
+  description = "CIDR block para a primeira subnet privada"
+  type        = string
+  default     = "10.192.20.0/24"
+}
+
+variable "private_subnet_2_cidr" {
+  description = "CIDR block para a segunda subnet privada"
+  type        = string
+  default     = "10.192.21.0/24"
+}

@@ -4,7 +4,7 @@ WITH source AS (
     SELECT * FROM movielens_rds_zeroetl.public.links
 )
 SELECT 
-    movieid,
-    imdbid,
-    tmdbid
+    "movieId" as movieid,
+    "imdbId" as imdbd,
+    "tmdbId" as tmdbid
 FROM source

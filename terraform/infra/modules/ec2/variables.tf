@@ -34,12 +34,6 @@ variable "instance_name" {
   type        = string
 }
 
-variable "tags" {
-  description = "Tags to apply to resources"
-  type        = map(string)
-  default     = {}
-}
-
 variable "ssh_allowed_cidrs" {
   description = "List of CIDR blocks allowed for SSH access"
   type        = list(string)
@@ -82,7 +76,24 @@ variable "ingress_rules" {
       to_port     = 22
       protocol    = "tcp"
       cidr_blocks = ["0.0.0.0/0"]
+    },
+    {
+      from_port   = 3000
+      to_port     = 3000
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    },
+    {
+      from_port   = 8000
+      to_port     = 8000
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
     }
   ]
 }
 
+variable "user_data" {
+  description = "User data script to run on instance boot (bootstrap script)"
+  type        = string
+  default     = ""
+}

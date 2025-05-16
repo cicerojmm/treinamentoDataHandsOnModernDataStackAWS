@@ -13,6 +13,12 @@ terraform {
 provider "aws" {
   region = "us-east-1"
   default_tags {
-    tags = var.global_tags
+    tags = {
+      Project     = "DataHandsOn-MDS"
+      Environment = var.environment
+      ManagedBy   = "Terraform"
+      Owner       = "DataTeam"
+      Application = "ModernDataStack"
+    }
   }
 }

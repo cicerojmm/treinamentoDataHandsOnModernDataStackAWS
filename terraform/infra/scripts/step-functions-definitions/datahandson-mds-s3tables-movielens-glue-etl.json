@@ -1,0 +1,139 @@
+{
+  "Comment": "Orquestração de Glue Jobs em Step Functions",
+  "StartAt": "RawToStaged",
+  "States": {
+    "RawToStaged": {
+      "Type": "Parallel",
+      "Branches": [
+        {
+          "StartAt": "RawToStagedTags",
+          "States": {
+            "RawToStagedTags": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::glue:startJobRun.sync",
+              "Parameters": {
+                "JobName": "datahandson-mds-s3tables-raw-staged-iceberg",
+                "Arguments": {
+                  "--input_path": "s3://cjmm-datalake-mds-raw/movielens_rds_dms_serverless/public/tags/",
+                  "--iceberg_table": "tags",
+                  "--namespace": "movielens_staged",
+                  "--primary_key": "userid,movieid"
+                }
+              },
+              "End": true
+            }
+          }
+        },
+        {
+          "StartAt": "RawToStagedMovies",
+          "States": {
+            "RawToStagedMovies": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::glue:startJobRun.sync",
+              "Parameters": {
+                "JobName": "datahandson-mds-s3tables-raw-staged-iceberg",
+                "Arguments": {
+                  "--input_path": "s3://cjmm-datalake-mds-raw/movielens_rds_dms_serverless/public/movies/",
+                  "--iceberg_table": "movies",
+                  "--namespace": "movielens_staged",
+                  "--primary_key": "movieid"
+                }
+              },
+              "End": true
+            }
+          }
+        },
+        {
+          "StartAt": "RawToStagedLinks",
+          "States": {
+            "RawToStagedLinks": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::glue:startJobRun.sync",
+              "Parameters": {
+                "JobName": "datahandson-mds-s3tables-raw-staged-iceberg",
+                "Arguments": {
+                  "--input_path": "s3://cjmm-datalake-mds-raw/movielens_rds_dms_serverless/public/links/",
+                  "--iceberg_table": "links",
+                  "--namespace": "movielens_staged",
+                  "--primary_key": "movieid"
+                }
+              },
+              "End": true
+            }
+          }
+        },
+        {
+          "StartAt": "RawToStagedRatings",
+          "States": {
+            "RawToStagedRatings": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::glue:startJobRun.sync",
+              "Parameters": {
+                "JobName": "datahandson-mds-s3tables-raw-staged-iceberg",
+                "Arguments": {
+                  "--input_path": "s3://cjmm-datalake-mds-raw/movielens_rds_dms_serverless/public/ratings/",
+                  "--iceberg_table": "ratings",
+                  "--namespace": "movielens_staged",
+                  "--primary_key": "userid,movieid"
+                }
+              },
+              "End": true
+            }
+          }
+        }
+      ],
+      "Next": "StagedToCurated"
+    },
+    "StagedToCurated": {
+      "Type": "Parallel",
+      "Branches": [
+        {
+          "StartAt": "StagedToCuratedUserTags",
+          "States": {
+            "StagedToCuratedUserTags": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::glue:startJobRun.sync",
+              "Parameters": {
+                "JobName": "datahandson-mds-s3tables-staged-curated-user-tags",
+                "Arguments": {
+                  "--tags_table": "movielens_staged.tags",
+                  "--output_table": "user_tags",
+                  "--namespace_destino": "movielens_curated"
+                }
+              },
+              "End": true
+            }
+          }
+        },
+        {
+          "StartAt": "StagedToCuratedMovieRating",
+          "States": {
+            "StagedToCuratedMovieRating": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::glue:startJobRun.sync",
+              "Parameters": {
+                "JobName": "datahandson-mds-s3tables-staged-curated-movie-ratings",
+                "Arguments": {
+                  "--movies_table": "movielens_staged.movies",
+                  "--ratings_table": "movielens_staged.ratings",
+                  "--namespace_destino": "movielens_curated",
+                  "--output_table": "movie_ratings"
+                }
+              },
+              "End": true
+            }
+          }
+        }
+      ],
+      "Next": "CuratedDataQuality"
+    },
+    "CuratedDataQuality": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::glue:startJobRun.sync",
+      "Parameters": {
+        "JobName": "datahandson-mds-deltalake-data-quality"
+      },
+      "End": true
+    }
+  }
+}
